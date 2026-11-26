@@ -1,0 +1,3109 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Draft, review, and export Air Force Officer Performance Brief narratives offline in a self-contained single HTML file."><link rel="icon" href="data:,"><title>OPB Performance Statement Prep Tool</title><style>:root {
+  /* Derived from Figma UI Style Guidelines cover preview (Primary #052C4C, Secondary #F2994A, Error #EB5757 -> AA #B42318) */
+  --navy-950: #031e36;
+  --navy-900: #052c4c;
+  --navy-800: #0b3f6b;
+  --navy-700: #145388;
+  --navy-100: #e8f0f7;
+  --navy-50: #f3f7fb;
+
+  --amber-700: #8a4b00;
+  --amber-500: #f2994a;
+  --amber-100: #fff2dc;
+  --amber-border: #e6b873;
+
+  --error: #b42318;
+  --error-hover: #911b12;
+  --error-bg: #fef2f2;
+  --error-border: #f1b5b0;
+
+  --success: #15653a;
+  --success-bg: #edf7f1;
+  --success-border: #b5ddc5;
+
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-subtle: #f8fafc;
+  --text: #111e2e;
+  --text-secondary: #334155;
+  --muted: #475569;
+  --border: #d5dde6;
+  --input-border: #94a3b8;
+  --focus: #145388;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(5, 44, 76, 0.06);
+  --shadow-md: 0 4px 14px rgba(5, 44, 76, 0.08);
+  --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: var(--font-sans);
+  font-size: 0.96rem;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  background: var(--navy-900);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Header */
+.app-header {
+  color: #fff;
+  background: var(--navy-900);
+  border-bottom: 3px solid var(--amber-500);
+}
+
+.header-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.2vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.header-subtitle {
+  margin: 4px 0 0;
+  color: #d6e4f0;
+  font-size: 0.9rem;
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #eef5fc;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Main shell */
+main {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 20px 24px 32px;
+}
+
+/* Notice banner */
+.notice {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border: 1px solid #c5d7e8;
+  border-left: 4px solid var(--navy-900);
+  border-radius: var(--radius-md);
+  color: var(--navy-950);
+  background: var(--navy-50);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+/* Global status bar */
+.status-bar {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  margin-bottom: 16px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+.status-bar.good {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.status-bar.error {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.toolbar > * {
+  flex: 1 1 142px;
+}
+
+/* Panels & Cards */
+.panel,
+.field-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  min-width: 0;
+}
+
+.panel {
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  color: var(--navy-900);
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.panel h3 {
+  margin: 0 0 8px;
+  color: var(--navy-900);
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.section-lead {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+/* Report selector & metadata */
+.report-switch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.report-switch label {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.report-switch button {
+  flex: 0 0 auto;
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field-label {
+  display: block;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 0.83rem;
+  font-weight: 600;
+}
+
+.field-label input,
+.field-label select {
+  margin-top: 5px;
+  font-weight: 400;
+}
+
+.field-label input {
+  display: block;
+}
+
+/* View controls */
+.view-controls {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.view-controls button {
+  min-height: 36px;
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+}
+
+/* Main two-column layout */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(320px, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.editor-column,
+.sidebar-column {
+  min-width: 0;
+}
+
+.sidebar-column {
+  display: grid;
+  gap: 16px;
+}
+
+.sidebar-column .panel {
+  margin-bottom: 0;
+}
+
+/* Narrative cards */
+.field-card {
+  margin-bottom: 16px;
+}
+
+.field-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface-subtle);
+}
+
+.field-heading-group {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.field-header h3 {
+  margin: 0;
+  color: var(--navy-900);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.field-description {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.count {
+  flex: 0 0 auto;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--navy-900);
+  background: var(--navy-100);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.count.at-limit {
+  color: #fff;
+  background: var(--amber-700);
+}
+
+.count.over-limit {
+  color: #fff;
+  background: var(--error);
+}
+
+.field-body {
+  padding: 16px 18px 18px;
+}
+
+/* Inputs & Textareas */
+textarea,
+input,
+select {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+textarea {
+  min-height: 124px;
+  padding: 12px 13px;
+  line-height: 1.55;
+  resize: vertical;
+  overflow-wrap: break-word;
+}
+
+textarea[aria-invalid="true"] {
+  border-color: var(--error);
+  background: #fffafa;
+}
+
+input,
+select {
+  min-height: 40px;
+  padding: 8px 11px;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 40px;
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M2.25 4.25 6 8l3.75-3.75-.9-.9L6 6.2 3.15 3.35z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-size: 12px 12px;
+}
+
+select::picker-icon {
+  display: none;
+}
+
+textarea:focus-visible,
+input:focus-visible,
+select:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+a:focus-visible,
+.file-label:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+textarea:focus,
+input:focus,
+select:focus {
+  border-color: var(--navy-900);
+}
+
+/* Buttons */
+button,
+.file-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid var(--navy-900);
+  border-radius: var(--radius-sm);
+  color: #fff;
+  background: var(--navy-900);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+button:hover:not(:disabled),
+.file-label:hover {
+  background: var(--navy-800);
+  border-color: var(--navy-800);
+}
+
+button.secondary,
+.file-label.secondary {
+  color: var(--navy-900);
+  background: var(--surface);
+  border-color: var(--input-border);
+}
+
+button.secondary:hover:not(:disabled),
+.file-label.secondary:hover {
+  color: var(--navy-950);
+  background: var(--navy-50);
+  border-color: var(--navy-900);
+}
+
+button.ghost {
+  color: var(--navy-900);
+  background: transparent;
+  border-color: transparent;
+}
+
+button.ghost:hover:not(:disabled) {
+  background: var(--navy-50);
+  border-color: var(--border);
+}
+
+button.danger {
+  color: #fff;
+  border-color: var(--error);
+  background: var(--error);
+}
+
+button.danger:hover:not(:disabled) {
+  background: var(--error-hover);
+  border-color: var(--error-hover);
+}
+
+button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+/* Per-section AI prompt actions & dropdown menu */
+.prompt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 10px;
+}
+
+.prompt-menu-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.prompt-menu-trigger {
+  min-height: 38px;
+}
+
+.prompt-menu-trigger::after {
+  content: "▾";
+  font-size: 0.8em;
+  margin-left: 2px;
+}
+
+.prompt-menu-trigger[aria-expanded="true"]::after {
+  content: "▴";
+}
+
+.prompt-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  z-index: 40;
+  min-width: 240px;
+  max-width: min(300px, calc(100vw - 44px));
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  display: grid;
+  gap: 4px;
+}
+
+.prompt-menu[hidden] {
+  display: none !important;
+}
+
+.prompt-menu-item {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  background: transparent;
+  font-weight: 500;
+}
+
+.prompt-menu-item:hover:not(:disabled),
+.prompt-menu-item:focus-visible {
+  color: var(--navy-900);
+  background: var(--navy-50);
+  border-color: var(--navy-100);
+}
+
+.prompt-copy-plain {
+  margin-left: auto;
+}
+
+.prompt-feedback {
+  flex: 1 0 100%;
+  font-size: 0.84rem;
+  color: var(--muted);
+  min-height: 0;
+  overflow-wrap: anywhere;
+}
+
+.prompt-feedback:empty {
+  display: none;
+}
+
+.prompt-feedback.good {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.prompt-feedback.error {
+  color: var(--error);
+  font-weight: 500;
+}
+
+/* Metrics & Helper row */
+.helper-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.helper-row span {
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+
+.helper-row .remaining-over {
+  color: var(--error);
+  background: var(--error-bg);
+  border-color: var(--error-border);
+  font-weight: 600;
+}
+
+/* Acronym review area */
+.acronym-review {
+  margin-top: 10px;
+  padding: 9px 12px;
+  border: 1px solid var(--amber-border);
+  border-radius: var(--radius-sm);
+  background: var(--amber-100);
+  color: #4a2800;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.acronym-review-label {
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+mark {
+  background: #ffe1a8;
+  color: #4a2800;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.acronym-review mark {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
+  border: 1px solid #d9a04d;
+  background: #fff9ee;
+}
+
+/* Advisories */
+.advisories {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.83rem;
+}
+
+.advisories:empty {
+  display: none;
+}
+
+.advisories li {
+  margin-bottom: 3px;
+}
+
+.advisories li.advisory-over {
+  color: var(--error);
+  font-weight: 600;
+}
+
+/* Guidance disclosures */
+.guidance-details {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.guidance-details summary {
+  cursor: pointer;
+  color: var(--navy-800);
+  font-weight: 600;
+  padding: 3px 0;
+}
+
+.guidance-details p {
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+/* Sidebar grids & controls */
+.control-stack {
+  display: grid;
+  gap: 8px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.three-col-inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.verb-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 230px;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding: 4px 2px;
+}
+
+.verb {
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid #bfd1e2;
+  border-radius: 999px;
+  color: var(--navy-900);
+  background: var(--navy-50);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.verb:hover:not(:disabled) {
+  color: #fff;
+  background: var(--navy-900);
+  border-color: var(--navy-900);
+}
+
+/* Custom acronym chips */
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.chip-list:empty {
+  display: none;
+}
+
+.acronym-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-subtle);
+  color: var(--navy-900);
+  font-size: 0.8rem;
+  font-weight: 600;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.acronym-chip button {
+  min-height: 22px;
+  min-width: 22px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.acronym-chip button:hover {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+/* Plain text preview box in sidebar */
+.preview {
+  min-height: 220px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-subtle);
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.full-width-btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Readable Report Preview view */
+.preview-panel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.preview-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preview-meta-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px 16px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+}
+
+.preview-meta-item dt {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.preview-meta-item dd {
+  margin: 2px 0 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.section-preview {
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  break-inside: avoid;
+}
+
+.preview-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.preview-heading h3 {
+  margin: 0;
+  color: var(--navy-900);
+  font-size: 1rem;
+}
+
+.preview-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-copy-status {
+  font-size: 0.82rem;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.preview-copy-status.error {
+  color: var(--error);
+}
+
+.section-preview-text {
+  margin: 10px 0 8px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.section-preview-text.is-blank {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.section-preview-meta {
+  display: inline-block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.section-preview-meta.over-limit {
+  color: var(--error);
+  font-weight: 600;
+}
+
+/* Typography helpers */
+.small-note {
+  margin: 6px 0 10px;
+  color: var(--muted);
+  font-size: 0.83rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.legend {
+  margin: 0;
+  padding-left: 19px;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.legend li {
+  margin-bottom: 5px;
+}
+
+.reference-panel a {
+  color: var(--navy-800);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+}
+
+.reference-panel a:hover {
+  color: var(--navy-950);
+}
+
+.sub-heading {
+  margin-top: 16px;
+}
+
+/* Footer */
+footer {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 24px 32px;
+  color: var(--muted);
+  font-size: 0.81rem;
+  line-height: 1.5;
+}
+
+/* Print-only elements hidden on screen */
+.print-narrative,
+.print-report-meta {
+  display: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .metadata-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .header-inner {
+    padding: 16px;
+  }
+
+  main {
+    padding: 14px 12px 24px;
+  }
+
+  footer {
+    padding: 0 12px 24px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .field-header,
+  .field-body {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .metadata-grid,
+  .two-col,
+  .three-col-inline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .report-switch button {
+    width: 100%;
+  }
+
+  .prompt-copy-plain {
+    margin-left: 0;
+  }
+
+  .view-controls {
+    display: flex;
+    width: 100%;
+  }
+
+  .view-controls button {
+    flex: 1 1 0;
+  }
+}
+
+/* Print stylesheet: clean readable report, full text including over-limit, zero editing controls or highlights */
+@media print {
+  @page {
+    margin: 0.6in;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+
+  .app-header {
+    background: #fff;
+    color: #000;
+    border-bottom: 2px solid #052c4c;
+  }
+
+  .header-inner {
+    padding: 0 0 10px;
+  }
+
+  .header-subtitle,
+  .header-badge,
+  .skip-link,
+  .notice,
+  .status-bar,
+  .toolbar,
+  .view-controls,
+  .report-switch,
+  .metadata-grid,
+  .report-panel-heading,
+  .sidebar-column,
+  .parking-panel,
+  .prompt-actions,
+  .helper-row,
+  .acronym-review,
+  .advisories,
+  .guidance-details,
+  .count,
+  .field-description,
+  #reportPreviewPanel,
+  footer {
+    display: none !important;
+  }
+
+  main {
+    max-width: none;
+    padding: 12px 0 0;
+  }
+
+  #editorLayout[hidden] {
+    display: block !important;
+  }
+
+  .layout {
+    display: block;
+  }
+
+  .panel,
+  .field-card {
+    overflow: visible;
+    box-shadow: none;
+    border: 1px solid #999;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    break-inside: avoid;
+  }
+
+  .report-details {
+    padding: 10px 12px;
+  }
+
+  .print-report-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px 14px;
+  }
+
+  .print-report-meta dt {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #444;
+    text-transform: uppercase;
+  }
+
+  .print-report-meta dd {
+    margin: 2px 0 0;
+    font-size: 10.5pt;
+    color: #000;
+    overflow-wrap: anywhere;
+  }
+
+  .field-header {
+    padding: 8px 12px;
+    background: #fff;
+    border-bottom: 1px solid #bbb;
+    border-radius: 0;
+  }
+
+  .field-header h3 {
+    color: #000;
+    font-size: 11pt;
+  }
+
+  .field-body {
+    padding: 10px 12px;
+  }
+
+  .field-body textarea {
+    display: none !important;
+  }
+
+  .print-narrative {
+    display: block;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: #000;
+  }
+}
+</style></head><body><a class="skip-link" href="#editorLayout">Skip to narratives</a><header class="app-header"><div class="header-inner"><div><h1>OPB Performance Statement Prep Tool</h1><p class="header-subtitle">Self-contained offline Air Force Officer Performance Brief drafting workspace</p></div><span class="header-badge">Offline Ready · Zero Network Requests</span></div></header><main><div class="notice"><strong>Automatic saving:</strong> Drafts save locally in this browser when storage is available. Open <code>opb.html</code> directly from disk with no server or installation. Because browser-local storage can depend on your browser profile and this file’s location, use <strong>Export JSON Backup</strong> before changing computers, browsers, profiles, or clearing site data.</div><section class="toolbar" aria-label="Document controls"><button id="exportBackupBtn" type="button">Export JSON Backup</button><label class="file-label">Import JSON Backup<input id="importBackupInput" class="sr-only" type="file" accept=".json,application/json"></label><button id="exportCsvBtn" type="button">Export CSV</button><label class="file-label">Import CSV<input id="importCsvInput" class="sr-only" type="file" accept=".csv,text/csv"></label><button id="printBtn" type="button" class="secondary">Print / Save PDF</button><button id="copyDraftBtn" type="button" class="secondary">Copy Full Draft</button><button id="clearDraftBtn" type="button" class="danger">Clear Draft</button></section><div id="status" class="status-bar" role="status" aria-live="polite">Initializing offline workspace…</div><section class="panel report-details" aria-labelledby="reportsHeading"><h2 id="reportsHeading" class="report-panel-heading">Reports</h2><div class="report-switch"><label class="field-label" for="reportSelect">Active report<select id="reportSelect"></select></label><button id="newReportBtn" type="button" class="secondary">New report</button></div><div class="metadata-grid"><label class="field-label">Officer name<input data-meta="name" type="text" placeholder="Officer name" autocomplete="off"></label><label class="field-label">Rank<input data-meta="rank" type="text" placeholder="Rank" autocomplete="off"></label><label class="field-label">Organization<input data-meta="unit_name" type="text" placeholder="Organization" autocomplete="off"></label><label class="field-label">Duty title<input data-meta="duty_title" type="text" placeholder="Duty title" autocomplete="off"></label><label class="field-label">Period start<input data-meta="period_start" type="date"></label><label class="field-label">Period end<input data-meta="period_end" type="date"></label></div><dl id="printReportMeta" class="print-report-meta" aria-hidden="true"></dl></section><div class="view-controls" role="group" aria-label="Report view"><button id="editViewBtn" type="button" aria-pressed="true">Edit report</button><button id="previewViewBtn" type="button" class="secondary" aria-pressed="false">Preview &amp; copy</button></div><section id="reportPreviewPanel" class="panel" aria-labelledby="reportPreviewHeading" hidden><div class="preview-panel-header"><div><h2 id="reportPreviewHeading">Report preview</h2><p class="section-lead">Review officer metadata and all six narratives in reading order. Highlighted terms mark possible acronyms to check against the AFPC list; plain-text copying preserves your original wording without markup.</p></div><div class="preview-panel-actions"><button id="previewCopyFullBtn" type="button" class="secondary">Copy Full Draft</button><button id="previewPrintBtn" type="button" class="secondary">Print / Save PDF</button></div></div><dl id="previewMetadata" class="preview-meta-card"></dl><div id="sectionPreviews"></div></section><div class="layout" id="editorLayout"><section class="editor-column" aria-labelledby="narrativesHeading"><h2 id="narrativesHeading" class="sr-only">OPB Narrative Sections</h2><div id="fieldContainer"></div><section class="panel parking-panel" aria-labelledby="parkingLotHeading"><h2 id="parkingLotHeading">Parking Lot</h2><p class="small-note">Capture facts, metrics, alternate wording, source notes, future achievements, or material not yet assigned to an OPB block. Excluded from AI writing prompts and OPB block limits.</p><textarea aria-label="Parking lot" id="parking_lot" placeholder="Capture accomplishments, supporting facts, metrics, and alternate language here."></textarea><div class="helper-row"><span id="parkingLotCount">0 characters · 0 words</span><span>Not included in OPB block character limits</span></div></section></section><aside class="sidebar-column" aria-label="Writing helpers and references"><section class="panel" aria-labelledby="verbPickerHeading"><h2 id="verbPickerHeading">Action Verb Picker</h2><div class="control-stack"><label class="field-label" for="verbTarget">Target section<select id="verbTarget"></select></label><div class="two-col"><label class="field-label" for="verbCategory">Category<select id="verbCategory"></select></label><label class="field-label" for="verbSearch">Filter verbs<input id="verbSearch" type="search" placeholder="Filter verbs"></label></div></div><div id="verbList" class="verb-list"></div><p class="small-note">Select a verb to insert it at the cursor or selection in the target narrative without losing surrounding text.</p></section><section class="panel" aria-labelledby="customTermsHeading"><h2 id="customTermsHeading">Custom Terms</h2><p class="small-note">Custom verbs and acronyms save automatically and are included in JSON backups. Custom acronyms suppress local review reminders only and never alter the official AFPC reference list.</p><h3>Add Action Verb</h3><div class="three-col-inline"><input id="newVerb" aria-label="New action verb" placeholder="e.g., Coordinated"><input id="newVerbCategory" aria-label="New verb category" placeholder="Category"><button id="addVerbBtn" type="button">Add</button></div><h3 class="sub-heading">Add Custom Acronym</h3><div class="two-col"><input id="newAcronym" aria-label="New custom acronym" placeholder="e.g., C2/ISR"><button id="addAcronymBtn" type="button">Add Acronym</button></div><div id="customAcronymList" class="chip-list" aria-label="Local custom acronyms"></div></section><section class="panel" aria-labelledby="draftPreviewHeading"><h2 id="draftPreviewHeading">Plain-Text Draft</h2><div id="preview" class="preview"></div><button id="copyPreviewBtn" type="button" class="secondary full-width-btn">Copy Full Draft to Clipboard</button></section><section class="panel" aria-labelledby="writingRemindersHeading"><h2 id="writingRemindersHeading">Writing Reminders</h2><ul class="legend"><li>Use standalone narrative performance statements.</li><li>Connect each action or behavior to a documented impact or outcome.</li><li>Use plain language and avoid unnecessary jargon.</li><li>Validate final acronyms and abbreviations against official sources.</li><li>Character counts include spaces, punctuation, and line breaks.</li></ul></section><section class="panel reference-panel" aria-labelledby="referencesHeading"><h2 id="referencesHeading">AFPC Acronym Reference &amp; Rules</h2><p class="small-note">Bundled offline lookup uses the <strong>October 28, 2024</strong> AFPC individually approved list (148 entries). Highlighted terms are local review items only.</p><p class="small-note">AFPC separately permits common ranks, office symbols, squadron-and-above organizations, weapons/platforms, and standard symbols or measurements by category. Custom acronyms suppress local reminders without changing the official lookup.</p><p class="small-note">At least one performance statement is expected per assessment section; white space is allowed. The reference tool permits “THIS SECTION NOT USED.” Limits and historical guidance come from OPB Prep Tool v1.5.pdf (internally labeled v1.4, 29 Aug 2023), with Mission ALQ guidance corrected to official Air Force Mission qualities.</p><ul class="legend"><li><a href="https://www.afpc.af.mil/Career-Management/Acronyms/" target="_blank" rel="noopener noreferrer">AFPC approved acronym list · October 28, 2024 snapshot</a></li><li><a href="https://www.arpc.afrc.af.mil/Portals/4/ALQ%20Writing%20Guide.pdf" target="_blank" rel="noopener noreferrer">Airman Leadership Qualities (ALQ) writing guide</a></li><li><a href="https://www.e-publishing.af.mil/" target="_blank" rel="noopener noreferrer">Air Force e-Publishing (current evaluation guidance)</a></li></ul></section></aside></div></main><footer>This application is an offline drafting aid. Confirm current evaluation guidance, final content, approved abbreviations, and official-system formatting through applicable supervisory, personnel, and organizational review channels.</footer><script>(function(root){
+'use strict';
+const fields=[
+ {key:'duty',title:'Duty description',limit:450,short:'Duty',description:'Describe the role, scope, responsibilities, people, and resources entrusted to the officer.',alq:'Position-specific narrative. Include responsibility level, people supervised, resources or projects managed. Use plain English and authorized acronyms. Include brief unit mission context only when needed to explain duties. Prior jobs should be mentioned only when they affect the evaluation. The source calls for the TDY duty description for 365-day extended deployments and total force assigned in a commander’s description.'},
+ {key:'mission',title:'Executing the mission',limit:350,short:'Mission',description:'Effectively uses knowledge, initiative, and adaptability to produce timely, high quality/quantity results to positively impact the mission.',alq:'Job proficiency • Initiative • Adaptability. Apply professional knowledge, take appropriate action, and adjust to changing conditions. The source PDF’s Mission ALQ button repeats the Leading People guidance; this app uses the Mission qualities from official Air Force ALQ guidance.'},
+ {key:'people',title:'Leading people',limit:350,short:'People',description:'Fosters cohesive teams, effectively communicates, and uses emotional intelligence to take care of people and accomplish the mission.',alq:'Inclusion & teamwork: collaborate to achieve an inclusive climate and common goals. Emotional intelligence: exercise self-awareness, manage emotions, understand others, and manage relationships. Communication: deliver clear, timely messages and listen actively.'},
+ {key:'resources',title:'Managing resources',limit:350,short:'Resources',description:'Manages assigned resources effectively and takes responsibility for actions/behaviors to maximize organizational performance.',alq:'Stewardship: responsibly manage time, equipment, people, funds, and facilities. Accountability: take responsibility for personal and team actions; demonstrate reliability and transparency.'},
+ {key:'unit',title:'Improving the unit',limit:350,short:'Unit',description:'Demonstrates critical thinking and fosters innovation to find creative solutions and improve mission execution.',alq:'Decision making: make informed, effective, timely decisions that weigh constraints, risks, and benefits. Innovation: think creatively, implement improvements, and take calculated risks.'},
+ {key:'reviewer',title:'Higher-level reviewer assessment',limit:250,short:'Reviewer',description:'Provide at least one performance statement within the space available.',alq:'The source requires comments with at least one performance statement; “THIS SECTION NOT USED” may serve as that statement. Review applicable guidance on inappropriate comments and referrals (source references: DAFI 36-2406 paragraphs 1.12 and 1.10). Verify current paragraph numbering before use.'}
+];
+const columns=['id','name','rank','unit_name','period_start','period_end','duty_title',...fields.map(f=>f.key),'parking','updated_at'];
+function blank(){return Object.fromEntries(columns.map(k=>[k,k==='id'?(globalThis.crypto?.randomUUID?.()||'opb-'+Date.now()+'-'+Math.random().toString(36).slice(2)):k==='name'?'Untitled officer':'']));}
+function csvParse(text){
+ text=text.replace(/^\uFEFF/,'');let rows=[],row=[],cell='',quoted=false,ended=false;
+ for(let i=0;i<text.length;i++){
+  const c=text[i];
+  if(quoted){if(c==='"'){if(text[i+1]==='"'){cell+='"';i++;}else{quoted=false;ended=true;}}else cell+=c;}
+  else if(c==='"'){if(cell||ended)throw Error('Unexpected quote in CSV.');quoted=true;}
+  else if(c===','){row.push(cell);cell='';ended=false;}
+  else if(c==='\r'||c==='\n'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cell);if(row.some(v=>v!==''))rows.push(row);row=[];cell='';ended=false;}
+  else {if(ended)throw Error('Unexpected text after a closing CSV quote.');cell+=c;}
+ }
+ if(quoted)throw Error('Unclosed quoted field in CSV.');
+ if(cell||row.length||ended){row.push(cell);if(row.some(v=>v!==''))rows.push(row);}
+ return rows;
+}
+// A leading apostrophe makes formula-like cells inert when opened in a spreadsheet.
+// Prefix literal apostrophes too, so our import can reverse the encoding losslessly.
+function protect(v){v=String(v??'');return /^[\s]*[=+\-@]/.test(v)||v.startsWith("'")?"'"+v:v;}
+function unprotect(v){return v.startsWith("'")&&(v[1]==="'"||/^[\s]*[=+\-@]/.test(v.slice(1)))?v.slice(1):v;}
+function serialize(reports){return '\uFEFF'+[columns,...reports.map(r=>columns.map(k=>protect(r[k])))].map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')+'\r\n';}
+function importCSV(text){const rows=csvParse(text);if(rows.length<2)throw Error('CSV must include a header and at least one report.');const h=rows.shift();if(new Set(h).size!==h.length)throw Error('Duplicate CSV headers.');for(const c of columns)if(!h.includes(c))throw Error('Missing CSV column: '+c);const ids=new Set();return rows.map((row,i)=>{if(row.length!==h.length)throw Error('CSV row '+(i+2)+' has the wrong number of columns.');let r=blank();h.forEach((k,j)=>{if(columns.includes(k))r[k]=unprotect(row[j]);});if(!r.id||ids.has(r.id))throw Error('Each report needs a unique, nonempty id.');ids.add(r.id);return r;});}
+function issues(r){let out=[];for(const f of fields){const t=r[f.key]||'';if(!t.trim())out.push({key:f.key,type:'missing',text:f.title+': add a narrative.'});if(t.length>f.limit)out.push({key:f.key,type:'over',text:f.title+': '+(t.length-f.limit)+(t.length-f.limit===1?' character over.':' characters over.')});if(t&&/\t|\n|\r/.test(t))out.push({key:f.key,type:'review',text:f.title+': review line breaks or tabs before pasting.'});if(t&&/^\s*[-•]/.test(t))out.push({key:f.key,type:'review',text:f.title+': use narrative sentences rather than bullet formatting.'});if(t&&/ {2,}|^\s|\s$/.test(t))out.push({key:f.key,type:'review',text:f.title+': review extra spaces.'});}if(r.period_start&&r.period_end&&r.period_end<r.period_start)out.push({key:'period_end',type:'review',text:'Reporting period ends before it begins.'});return out;}
+
+const legacyKeys={duty:'duty_description',mission:'executing_mission',people:'leading_people',resources:'managing_resources',unit:'improving_unit',reviewer:'hlr_assessment',parking:'parking_lot'};
+function draftFromReport(report){return Object.fromEntries(Object.entries(legacyKeys).map(([k,v])=>[v,report[k]||'']));}
+function reportFromDraft(draft,report=blank()){return {...report,...Object.fromEntries(Object.entries(legacyKeys).map(([k,v])=>[k,draft[v]||'']))};}
+function sanitizeBackup(candidate,defaults){
+ if(!candidate||typeof candidate!=='object'||Array.isArray(candidate))throw Error('The selected file is not an OPB backup.');
+ if(candidate.state)candidate=candidate.state;
+ const d=candidate.draft;
+ if(!d||typeof d!=='object'||Array.isArray(d)||!Object.values(legacyKeys).some(k=>Object.hasOwn(d,k)))throw Error('The backup does not contain recognized OPB draft fields.');
+ const clean=JSON.parse(JSON.stringify(defaults));
+ for(const key of Object.values(legacyKeys)){if(d[key]!=null&&typeof d[key]!=='string')throw Error('Invalid text in backup field: '+key);clean.draft[key]=d[key]||'';}
+ if(candidate.verbs!==undefined){if(!Array.isArray(candidate.verbs)||candidate.verbs.some(v=>!v||typeof v.verb!=='string'||(v.category!=null&&typeof v.category!=='string')))throw Error('Invalid action verb list.');clean.verbs=candidate.verbs.map(v=>({verb:v.verb.trim(),category:(v.category||'General').trim()||'General'})).filter(v=>v.verb);}
+ if(candidate.acronyms!==undefined){if(!Array.isArray(candidate.acronyms)||candidate.acronyms.some(v=>typeof v!=='string'))throw Error('Invalid acronym review list.');clean.acronyms=[...new Set(candidate.acronyms.map(v=>v.trim().toUpperCase()).filter(Boolean))].sort();}
+ clean.updatedAt=typeof candidate.updatedAt==='string'?candidate.updatedAt:'';
+ if(candidate.reports!==undefined){
+  if(!Array.isArray(candidate.reports)||!candidate.reports.length)throw Error('Invalid report list.');
+  const ids=new Set();clean.reports=candidate.reports.map(r=>{if(!r||columns.some(k=>typeof r[k]!=='string')||!r.id||ids.has(r.id))throw Error('Invalid or duplicate report in backup.');ids.add(r.id);return Object.fromEntries(columns.map(k=>[k,r[k]]));});
+  clean.activeReportId=clean.reports.some(r=>r.id===candidate.activeReportId)?candidate.activeReportId:clean.reports[0].id;
+  const i=clean.reports.findIndex(r=>r.id===clean.activeReportId);clean.reports[i]=reportFromDraft(clean.draft,clean.reports[i]);
+ }else{const r=reportFromDraft(clean.draft);clean.reports=[r];clean.activeReportId=r.id;}
+ return clean;
+}
+function mergeVerbs(...lists){const seen=new Set();return lists.flat().filter(item=>{const k=JSON.stringify([item.verb.toLowerCase(),item.category.toLowerCase()]);if(seen.has(k))return false;seen.add(k);return true;});}
+function advisory(text,key,verbs,acronyms){
+ if(!text.trim())return ['Block is empty.'];
+ if(/^THIS SECTION NOT USED[.,]?$/i.test(text.trim()))return ['Marked unused. Confirm this is appropriate under your applicable guidance.'];
+ const out=[];
+ if(!/[.!?]["')\]]?$/.test(text.trim()))out.push('Consider ending the statement with sentence punctuation.');
+ if(key!=='duty_description'&&key!=='hlr_assessment'){
+ const lower=text.trim().toLowerCase();if(!verbs.some(v=>lower===v.verb.toLowerCase()||lower.startsWith(v.verb.toLowerCase()+' ')))out.push('Review the action or behavior. Beginning with a listed verb is optional.');
+ out.push('Confirm each statement connects an action to an impact, result, or outcome. This tool cannot judge that relationship.');
+ }
+ return out;
+}
+const api={fields,columns,blank,csvParse,serialize,importCSV,issues,legacyKeys,draftFromReport,reportFromDraft,sanitizeBackup,mergeVerbs,advisory};if(typeof module!=='undefined')module.exports=api;else root.OPB=api;
+})(typeof window!=='undefined'?window:globalThis);
+</script><script>window.OPB_VERBS = {
+  "Led a project": [
+    "Administered",
+    "Built",
+    "Chaired",
+    "Charted",
+    "Controlled",
+    "Coordinated",
+    "Created",
+    "Designed",
+    "Developed",
+    "Devised",
+    "Engineered",
+    "Established",
+    "Executed",
+    "Formalized",
+    "Formed",
+    "Formulated",
+    "Founded",
+    "Headed",
+    "Implemented",
+    "Incorporated",
+    "Initiated",
+    "Instituted",
+    "Introduced",
+    "Launched",
+    "Operated",
+    "Orchestrated",
+    "Organized",
+    "Oversaw",
+    "Pioneered",
+    "Planned",
+    "Produced",
+    "Programmed",
+    "Spearheaded"
+  ],
+  "Increased efficiency or results": [
+    "Accelerated",
+    "Achieved",
+    "Advanced",
+    "Amplified",
+    "Boosted",
+    "Capitalized",
+    "Delivered",
+    "Enhanced",
+    "Expanded",
+    "Expedited",
+    "Furthered",
+    "Gained",
+    "Generated",
+    "Improved",
+    "Lifted",
+    "Maximized",
+    "Outpaced",
+    "Stimulated",
+    "Sustained"
+  ],
+  "Changed or improved something": [
+    "Centralized",
+    "Clarified",
+    "Converted",
+    "Customized",
+    "Influenced",
+    "Integrated",
+    "Merged",
+    "Modified",
+    "Overhauled",
+    "Redesigned",
+    "Refined",
+    "Refocused",
+    "Rehabilitated",
+    "Remodeled",
+    "Reorganized",
+    "Replaced",
+    "Restructured",
+    "Revamped",
+    "Revitalized",
+    "Simplified",
+    "Standardized",
+    "Streamlined",
+    "Strengthened",
+    "Updated",
+    "Upgraded",
+    "Transformed"
+  ],
+  "Managed a team": [
+    "Aligned",
+    "Cultivated",
+    "Directed",
+    "Enabled",
+    "Facilitated",
+    "Fostered",
+    "Guided",
+    "Hired",
+    "Inspired",
+    "Mentored",
+    "Mobilized",
+    "Motivated",
+    "Recruited",
+    "Regulated",
+    "Shaped",
+    "Supervised",
+    "Taught",
+    "Trained",
+    "Unified",
+    "United"
+  ],
+  "Oversaw or regulated": [
+    "Authorized",
+    "Blocked",
+    "Delegated",
+    "Dispatched",
+    "Enforced",
+    "Ensured",
+    "Inspected",
+    "Itemized",
+    "Monitored",
+    "Screened",
+    "Scrutinized",
+    "Verified"
+  ],
+  "Saved time or money": [
+    "Conserved",
+    "Consolidated",
+    "Decreased",
+    "Deducted",
+    "Diagnosed",
+    "Lessened",
+    "Reconciled",
+    "Reduced",
+    "Yielded"
+  ],
+  "Brought in partners or resources": [
+    "Acquired",
+    "Forged",
+    "Navigated",
+    "Negotiated",
+    "Partnered",
+    "Secured"
+  ],
+  "Supported customers": [
+    "Advised",
+    "Advocated",
+    "Arbitrated",
+    "Coached",
+    "Consulted",
+    "Educated",
+    "Fielded",
+    "Informed",
+    "Resolved"
+  ],
+  "Researched or analyzed": [
+    "Analyzed",
+    "Assembled",
+    "Assessed",
+    "Audited",
+    "Calculated",
+    "Discovered",
+    "Evaluated",
+    "Examined",
+    "Explored",
+    "Forecasted",
+    "Identified",
+    "Interpreted",
+    "Investigated",
+    "Mapped",
+    "Measured",
+    "Qualified",
+    "Quantified",
+    "Surveyed",
+    "Tested",
+    "Tracked"
+  ],
+  "Wrote or communicated": [
+    "Authored",
+    "Briefed",
+    "Campaigned",
+    "Co-authored",
+    "Composed",
+    "Conveyed",
+    "Convinced",
+    "Corresponded",
+    "Counseled",
+    "Critiqued",
+    "Defined",
+    "Documented",
+    "Edited",
+    "Illustrated",
+    "Lobbied",
+    "Persuaded",
+    "Promoted",
+    "Publicized",
+    "Reviewed"
+  ],
+  "Achieved something": [
+    "Attained",
+    "Awarded",
+    "Completed",
+    "Demonstrated",
+    "Earned",
+    "Exceeded",
+    "Outperformed",
+    "Reached",
+    "Showcased",
+    "Succeeded",
+    "Surpassed",
+    "Targeted"
+  ]
+};
+
+// Verified live against https://www.afpc.af.mil/Career-Management/Acronyms/ ("28 Oct 24 Update", 148 entries).
+window.OPB_AFPC_SNAPSHOT = {
+  date: "October 28, 2024",
+  sourceUrl: "https://www.afpc.af.mil/Career-Management/Acronyms/",
+  entries: [
+    "ABM", "ACE", "AD", "ADCON", "AFE", "AFFORGEN", "AFI", "AFMAN", "AFSC",
+    "AFSO21", "AGE", "AGR", "AI", "ALQ", "ALS", "AOC", "AOR", "APF", "ART",
+    "AT", "ATC", "ATO", "BMT", "BNR", "BTZ", "C2", "C4ISR", "CAOC", "CAS",
+    "CAT", "CATM", "CBRN", "CBT", "CCAF", "CCIP", "CDI", "CFETP", "CFM",
+    "CLA", "CLC", "COA", "CODEL", "CONOPS", "CONUS", "COOP", "CPI", "CPR",
+    "CSAR", "CUI", "DAFI", "DAFMAN", "DEOCS", "DG", "DHA", "DSG", "DV",
+    "EKIA", "EOC", "EOD", "EOY", "EPB", "EW", "FAM", "FHP", "FMC", "FOB",
+    "FOC", "FOL", "FPCON", "FTEC", "FTU", "GPA", "GPS", "GSU", "GTC", "IDT",
+    "IDE", "IED", "IMA", "IOC", "IP", "ISR", "IT", "JADC2", "JROTC", "KIA",
+    "LOE", "MCA", "MDS", "MILCON", "MILPDS", "MOA", "MOU", "MTF", "MWR",
+    "MX", "NC3", "NCOA", "NCR", "NDAA", "NDS", "NEO", "NIPR", "NMC", "O&M",
+    "OCO", "OCONUS", "OJT", "OPLAN", "OPSEC", "OTS", "PCS", "PDE", "PFA",
+    "PME", "POC", "PT", "QA", "QoL", "ROE", "ROTC", "RPA", "SAPR", "SCIF",
+    "SDE", "SERE", "SIPR", "SME", "SNCOA", "SOF", "SOP", "SOS", "STEM",
+    "TACP", "TCCC", "TDY", "TFI", "TR", "TS", "TTP", "UCI", "UCMJ", "UEI",
+    "UTA", "UTC", "UXO", "WRM", "XAB"
+  ]
+};
+</script><script>(function (root) {
+  "use strict";
+
+  const DB_NAME = "OPBPrepToolDatabase";
+  const DB_VERSION = 1;
+  const STORE_NAME = "draftState";
+  const RECORD_ID = "activeDraft";
+  const FALLBACK_STORAGE_KEY = "OPBPrepToolFallbackState";
+
+  let database = null;
+  let saveChain = Promise.resolve();
+  let latestQueuedVersion = 0;
+
+  function openDatabase() {
+    return new Promise((resolve, reject) => {
+      if (!root.indexedDB) {
+        reject(new Error("IndexedDB unavailable"));
+        return;
+      }
+      const request = root.indexedDB.open(DB_NAME, DB_VERSION);
+
+      request.onupgradeneeded = event => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME, { keyPath: "id" });
+        }
+      };
+
+      request.onsuccess = event => resolve(event.target.result);
+      request.onerror = () => reject(request.error);
+      request.onblocked = () => reject(new Error("Browser database is blocked by another tab."));
+    });
+  }
+
+  function readFromIndexedDB() {
+    return new Promise((resolve, reject) => {
+      const transaction = database.transaction(STORE_NAME, "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+      const request = store.get(RECORD_ID);
+
+      request.onsuccess = () => resolve(request.result ? request.result.data : null);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  function writeToIndexedDB(data) {
+    return new Promise((resolve, reject) => {
+      const transaction = database.transaction(STORE_NAME, "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+
+      store.put({ id: RECORD_ID, data });
+
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+      transaction.onabort = () => reject(transaction.error || new Error("Browser save was interrupted."));
+    });
+  }
+
+  async function loadInitialState({ sanitizeState, createDefaultState, onVersionChange }) {
+    let stored = null;
+    let fallback = null;
+
+    try {
+      const text = root.localStorage.getItem(FALLBACK_STORAGE_KEY);
+      if (text) fallback = sanitizeState(JSON.parse(text));
+    } catch {
+      fallback = null;
+    }
+
+    try {
+      database = await openDatabase();
+      database.onversionchange = () => {
+        database.close();
+        database = null;
+        if (onVersionChange) onVersionChange();
+      };
+      const value = await readFromIndexedDB();
+      if (value) stored = sanitizeState(value);
+    } catch {
+      if (database) {
+        try { database.close(); } catch {}
+      }
+      database = null;
+    }
+
+    if (fallback && (!stored || fallback.updatedAt > stored.updatedAt)) {
+      stored = fallback;
+    }
+
+    if (stored) {
+      return {
+        state: stored,
+        restored: true,
+        hasDatabase: Boolean(database),
+        message: "Browser draft restored. Export a backup for portability."
+      };
+    }
+
+    // Migrate earlier Studio workspace only if no newer draft was found.
+    try {
+      const rawStudio = root.localStorage.getItem("opb-studio-v1");
+      const studio = rawStudio ? JSON.parse(rawStudio) : null;
+      if (studio?.reports?.length) {
+        const csv = OPB.serialize(studio.reports);
+        const reports = OPB.importCSV(csv);
+        const migrated = createDefaultState();
+        migrated.reports = reports;
+        migrated.activeReportId = reports.some(r => r.id === studio.currentId)
+          ? studio.currentId
+          : reports[0].id;
+        migrated.draft = OPB.draftFromReport(
+          reports.find(r => r.id === migrated.activeReportId)
+        );
+        return {
+          state: migrated,
+          restored: true,
+          hasDatabase: Boolean(database),
+          message: "Earlier OPB Studio reports restored. Export a backup to preserve them."
+        };
+      }
+    } catch {}
+
+    return {
+      state: null,
+      restored: false,
+      hasDatabase: Boolean(database),
+      message: database
+        ? "New draft started. Browser saving is available."
+        : "Browser database unavailable. Export backups regularly."
+    };
+  }
+
+  function persistSnapshot(snapshot, version) {
+    if (Number.isInteger(version) && version > latestQueuedVersion) {
+      latestQueuedVersion = version;
+    }
+
+    const run = async () => {
+      // Skip writing a superseded snapshot so an older queued save cannot overwrite newer edits.
+      if (Number.isInteger(version) && version < latestQueuedVersion) {
+        return { saved: true, skipped: true, backend: database ? "indexeddb" : "localStorage" };
+      }
+
+      try {
+        if (database) {
+          await writeToIndexedDB(snapshot);
+          return { saved: true, skipped: false, backend: "indexeddb" };
+        }
+        root.localStorage.setItem(FALLBACK_STORAGE_KEY, JSON.stringify(snapshot));
+        return { saved: true, skipped: false, backend: "localStorage" };
+      } catch {
+        try {
+          root.localStorage.setItem(FALLBACK_STORAGE_KEY, JSON.stringify(snapshot));
+          return { saved: true, skipped: false, backend: "fallback" };
+        } catch {
+          return { saved: false, skipped: false, backend: "none" };
+        }
+      }
+    };
+
+    saveChain = saveChain.then(run, run);
+    return saveChain;
+  }
+
+  function hasDatabase() {
+    return Boolean(database);
+  }
+
+  const api = {
+    DB_NAME,
+    DB_VERSION,
+    STORE_NAME,
+    RECORD_ID,
+    FALLBACK_STORAGE_KEY,
+    loadInitialState,
+    persistSnapshot,
+    hasDatabase
+  };
+
+  if (typeof module !== "undefined") {
+    module.exports = api;
+  } else {
+    root.OPB_STORAGE = api;
+  }
+})(typeof window !== "undefined" ? window : globalThis);
+</script><script>(function (root) {
+  "use strict";
+
+  const FALLBACK_APPROVED = [
+    "ABM", "ACE", "AD", "ADCON", "AFE", "AFFORGEN", "AFI", "AFMAN", "AFSC",
+    "AFSO21", "AGE", "AGR", "AI", "ALQ", "ALS", "AOC", "AOR", "APF", "ART",
+    "AT", "ATC", "ATO", "BMT", "BNR", "BTZ", "C2", "C4ISR", "CAOC", "CAS",
+    "CAT", "CATM", "CBRN", "CBT", "CCAF", "CCIP", "CDI", "CFETP", "CFM",
+    "CLA", "CLC", "COA", "CODEL", "CONOPS", "CONUS", "COOP", "CPI", "CPR",
+    "CSAR", "CUI", "DAFI", "DAFMAN", "DEOCS", "DG", "DHA", "DSG", "DV",
+    "EKIA", "EOC", "EOD", "EOY", "EPB", "EW", "FAM", "FHP", "FMC", "FOB",
+    "FOC", "FOL", "FPCON", "FTEC", "FTU", "GPA", "GPS", "GSU", "GTC", "IDT",
+    "IDE", "IED", "IMA", "IOC", "IP", "ISR", "IT", "JADC2", "JROTC", "KIA",
+    "LOE", "MCA", "MDS", "MILCON", "MILPDS", "MOA", "MOU", "MTF", "MWR",
+    "MX", "NC3", "NCOA", "NCR", "NDAA", "NDS", "NEO", "NIPR", "NMC", "O&M",
+    "OCO", "OCONUS", "OJT", "OPLAN", "OPSEC", "OTS", "PCS", "PDE", "PFA",
+    "PME", "POC", "PT", "QA", "QoL", "ROE", "ROTC", "RPA", "SAPR", "SCIF",
+    "SDE", "SERE", "SIPR", "SME", "SNCOA", "SOF", "SOP", "SOS", "STEM",
+    "TACP", "TCCC", "TDY", "TFI", "TR", "TS", "TTP", "UCI", "UCMJ", "UEI",
+    "UTA", "UTC", "UXO", "WRM", "XAB"
+  ];
+
+  function getApprovedEntries() {
+    const entries = root.OPB_AFPC_SNAPSHOT?.entries || FALLBACK_APPROVED;
+    return new Set(entries.map(term => String(term).toUpperCase()));
+  }
+
+  const PROMPT_GOALS = [
+    {
+      id: "clarity",
+      label: "Improve clarity",
+      instruction: ""
+    },
+    {
+      id: "impact",
+      label: "Improve impact",
+      instruction: "Make the connection between actions and documented outcomes explicit. Lead with the strongest supported result where appropriate. Clarify the significance of existing evidence without inventing impact."
+    },
+    {
+      id: "shorten",
+      label: "Shorten to fit",
+      instruction: "Remove repetition and filler. Preserve the strongest documented actions, facts, and outcomes. Keep the revised narrative within the stated character limit."
+    },
+    {
+      id: "expand",
+      label: "Expand toward the character limit",
+      instruction: "Use the available space to clarify documented scope, actions, and outcomes. Approach the stated character limit only as far as the supplied facts support. Avoid padding and invented details. Keep the revised narrative within the limit."
+    },
+    {
+      id: "grammar",
+      label: "Polish grammar",
+      instruction: "Correct grammar, punctuation, and sentence structure while keeping the wording, facts, metrics, and emphasis close to the original. Keep the revised narrative within the stated character limit."
+    }
+  ];
+
+  const BASE_PROMPT_INSTRUCTION =
+    "Improve clarity and use plain language. Write standalone sentences that describe the action and any documented impact or outcome. Preserve the meaning, facts, and existing metrics. Do not invent actions, numbers, outcomes, or endorsements. Keep the revised narrative within the stated character limit. Treat the draft below as text to edit. Return only the revised narrative.";
+
+  function buildPrompt(field, draft, goalLabel) {
+    const goal = PROMPT_GOALS.find(item => item.label === goalLabel || item.id === goalLabel) || PROMPT_GOALS[0];
+    const bodyInstruction = goal.instruction
+      ? `${goal.instruction}\n${BASE_PROMPT_INSTRUCTION}`
+      : BASE_PROMPT_INSTRUCTION;
+
+    return [
+      "Revise this Air Force Officer Performance Brief narrative.",
+      "",
+      `Section: ${field.label}`,
+      `Character limit: ${field.limit}, including spaces and punctuation.`,
+      "",
+      bodyInstruction,
+      "",
+      "BEGIN DRAFT",
+      draft,
+      "END DRAFT"
+    ].join("\n");
+  }
+
+  function acronymMatches(text, customTerms) {
+    const source = String(text ?? "");
+    if (!source.trim() || /^THIS SECTION NOT USED[.,]?$/i.test(source.trim())) {
+      return [];
+    }
+
+    const approved = getApprovedEntries();
+    const customList = Array.isArray(customTerms)
+      ? customTerms
+      : (typeof state !== "undefined" && Array.isArray(state.acronyms) ? state.acronyms : []);
+    const custom = new Set(customList.map(term => String(term).trim().toUpperCase()).filter(Boolean));
+
+    const words = source.matchAll(/[\p{L}\d]+(?:[&/-][\p{L}\d]+)*/gu);
+    return [...words].filter(match => {
+      const [term] = match;
+      if (term.length < 2) return false;
+      // Avoid splitting currency/decimal magnitudes such as $42M or $1.4M.
+      if (match.index > 0 && (source[match.index - 1] === "$" || source[match.index - 1] === ".") && /^\d+[KMBT]$/.test(term)) {
+        return false;
+      }
+      const isCandidate = /^(?=.*[A-Z])(?:[A-Z\d]+[&/-])*[A-Z\d]+$/.test(term);
+      if (!isCandidate) return false;
+      const upper = term.toUpperCase();
+      return !approved.has(upper) && !custom.has(upper);
+    });
+  }
+
+  function closeAllPromptMenus(exceptMenu) {
+    if (typeof document === "undefined") return;
+    document.querySelectorAll(".prompt-menu").forEach(menu => {
+      if (menu !== exceptMenu && !menu.hidden) {
+        menu.hidden = true;
+        const trigger = menu.previousElementSibling;
+        if (trigger && trigger.classList.contains("prompt-menu-trigger")) {
+          trigger.setAttribute("aria-expanded", "false");
+        }
+      }
+    });
+  }
+
+  function setupPromptActions(card, field, textarea) {
+    const controls = document.createElement("div");
+    controls.className = "prompt-actions";
+
+    const primary = document.createElement("button");
+    primary.type = "button";
+    primary.textContent = "Copy prompt and draft";
+    primary.setAttribute("aria-label", `Copy prompt and draft for ${field.label}`);
+
+    const menuWrap = document.createElement("div");
+    menuWrap.className = "prompt-menu-wrap";
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "secondary prompt-menu-trigger";
+    trigger.textContent = "More prompts";
+    trigger.setAttribute("aria-haspopup", "menu");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-label", `More prompts for ${field.label}`);
+
+    const menu = document.createElement("div");
+    menu.className = "prompt-menu";
+    menu.setAttribute("role", "menu");
+    menu.setAttribute("aria-label", `Additional writing prompts for ${field.label}`);
+    menu.hidden = true;
+
+    const copyPlainBtn = document.createElement("button");
+    copyPlainBtn.type = "button";
+    copyPlainBtn.className = "secondary prompt-copy-plain";
+    copyPlainBtn.textContent = "Copy text";
+    copyPlainBtn.setAttribute("aria-label", `Copy ${field.label} text as plain text`);
+
+    const feedback = document.createElement("span");
+    feedback.className = "prompt-feedback";
+    feedback.setAttribute("role", "status");
+    feedback.setAttribute("aria-live", "polite");
+
+    function setFeedback(message, type) {
+      feedback.textContent = message;
+      feedback.className = `prompt-feedback ${type || ""}`.trim();
+    }
+
+    function openMenu(focusIndex) {
+      closeAllPromptMenus(menu);
+      menu.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      const items = [...menu.querySelectorAll('[role="menuitem"]')];
+      if (Number.isInteger(focusIndex) && items[focusIndex]) {
+        items[focusIndex].focus();
+      }
+    }
+
+    function closeMenu(returnFocus) {
+      if (menu.hidden) return;
+      menu.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      if (returnFocus) {
+        trigger.focus();
+      }
+    }
+
+    async function copyPrompt(goalLabel, focusTarget) {
+      const draft = textarea.value;
+      if (!draft.trim()) {
+        setFeedback("Enter a narrative before copying a prompt.", "error");
+        if (focusTarget) focusTarget.focus({ preventScroll: true });
+        return;
+      }
+      const prompt = buildPrompt(field, draft, goalLabel);
+      const ok = await copyText(prompt);
+      if (ok) {
+        const label = goalLabel === "Improve clarity" ? "Clarity prompt" : `${goalLabel} prompt`;
+        setFeedback(`${label} copied for ${field.label}.`, "good");
+      } else {
+        setFeedback("Could not copy to clipboard. Check browser permissions or copy manually.", "error");
+      }
+      if (focusTarget) focusTarget.focus({ preventScroll: true });
+    }
+
+    primary.addEventListener("click", () => {
+      closeMenu(false);
+      copyPrompt("Improve clarity", primary);
+    });
+
+    copyPlainBtn.addEventListener("click", async () => {
+      closeMenu(false);
+      const draft = textarea.value;
+      if (!draft.trim()) {
+        setFeedback("Enter a narrative before copying text.", "error");
+        return;
+      }
+      const ok = await copyText(draft);
+      setFeedback(
+        ok ? `${field.label} text copied.` : "Could not copy to clipboard. Check browser permissions.",
+        ok ? "good" : "error"
+      );
+    });
+
+    trigger.addEventListener("click", event => {
+      event.stopPropagation();
+      if (menu.hidden) {
+        openMenu();
+      } else {
+        closeMenu(false);
+      }
+    });
+
+    trigger.addEventListener("keydown", event => {
+      if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openMenu(0);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        openMenu(PROMPT_GOALS.length - 2);
+      } else if (event.key === "Escape") {
+        closeMenu(true);
+      }
+    });
+
+    PROMPT_GOALS.slice(1).forEach((goal, index, list) => {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "prompt-menu-item";
+      item.setAttribute("role", "menuitem");
+      item.textContent = goal.label;
+
+      item.addEventListener("click", () => {
+        closeMenu(false);
+        copyPrompt(goal.label, trigger);
+      });
+
+      item.addEventListener("keydown", event => {
+        const items = [...menu.querySelectorAll('[role="menuitem"]')];
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          items[(index + 1) % list.length].focus();
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          items[(index - 1 + list.length) % list.length].focus();
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          items[0].focus();
+        } else if (event.key === "End") {
+          event.preventDefault();
+          items[list.length - 1].focus();
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          closeMenu(true);
+        } else if (event.key === "Tab") {
+          closeMenu(false);
+        }
+      });
+
+      menu.append(item);
+    });
+
+    menuWrap.append(trigger, menu);
+    controls.append(primary, menuWrap, copyPlainBtn, feedback);
+    textarea.after(controls);
+  }
+
+  function renderAcronymReview(field, text) {
+    const review = document.getElementById(`${field.key}_review`);
+    if (!review) return;
+    const terms = [...new Set(acronymMatches(text).map(([term]) => term))];
+    review.replaceChildren();
+    review.hidden = !terms.length;
+    if (!terms.length) return;
+
+    const label = document.createElement("span");
+    label.className = "acronym-review-label";
+    label.textContent = "Review against AFPC list:";
+    review.append(label);
+
+    for (const term of terms) {
+      const mark = document.createElement("mark");
+      mark.textContent = term;
+      review.append(mark, " ");
+    }
+  }
+
+  function renderAcronymHighlights(target, text) {
+    target.replaceChildren();
+    const source = String(text ?? "");
+    let cursor = 0;
+    for (const match of acronymMatches(source)) {
+      const [term] = match;
+      const mark = document.createElement("mark");
+      mark.textContent = term;
+      mark.title = "Review against AFPC list";
+      target.append(document.createTextNode(source.slice(cursor, match.index)), mark);
+      cursor = match.index + term.length;
+    }
+    target.append(document.createTextNode(source.slice(cursor)));
+  }
+
+  if (typeof document !== "undefined") {
+    document.addEventListener("click", event => {
+      if (!event.target.closest?.(".prompt-menu-wrap")) {
+        closeAllPromptMenus();
+      }
+    });
+  }
+
+  const api = {
+    PROMPT_GOALS,
+    BASE_PROMPT_INSTRUCTION,
+    getApprovedEntries,
+    buildPrompt,
+    acronymMatches,
+    setupPromptActions,
+    renderAcronymReview,
+    renderAcronymHighlights,
+    closeAllPromptMenus
+  };
+
+  if (typeof module !== "undefined") {
+    module.exports = api;
+  } else {
+    root.OPB_WRITING = api;
+    root.setupPromptActions = setupPromptActions;
+    root.acronymMatches = acronymMatches;
+    root.renderAcronymReview = renderAcronymReview;
+    root.renderAcronymHighlights = renderAcronymHighlights;
+  }
+})(typeof window !== "undefined" ? window : globalThis);
+</script><script>(function (root) {
+  "use strict";
+
+  const byId = id => document.getElementById(id);
+
+  function formatMetadataEntries(report) {
+    const period = [report.period_start, report.period_end].filter(Boolean).join(" to ");
+    return [
+      { label: "Officer name", value: report.name || "Untitled officer" },
+      { label: "Rank", value: report.rank || "—" },
+      { label: "Organization", value: report.unit_name || "—" },
+      { label: "Duty title", value: report.duty_title || "—" },
+      { label: "Reporting period", value: period || "—" }
+    ];
+  }
+
+  function renderPreviewMetadata() {
+    const report = activeReport();
+    const entries = formatMetadataEntries(report);
+
+    for (const targetId of ["previewMetadata", "printReportMeta"]) {
+      const container = byId(targetId);
+      if (!container) continue;
+      container.replaceChildren();
+      for (const item of entries) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "preview-meta-item";
+        const dt = document.createElement("dt");
+        dt.textContent = item.label;
+        const dd = document.createElement("dd");
+        dd.textContent = item.value;
+        wrapper.append(dt, dd);
+        container.append(wrapper);
+      }
+    }
+  }
+
+  function renderSectionPreviews() {
+    renderPreviewMetadata();
+    const container = byId("sectionPreviews");
+    if (!container) return;
+    container.replaceChildren();
+
+    for (const field of FIELD_META) {
+      const rawText = state.draft[field.key] || "";
+      const card = document.createElement("section");
+      card.className = "section-preview";
+
+      const header = document.createElement("div");
+      header.className = "preview-heading";
+
+      const title = document.createElement("h3");
+      title.textContent = field.label;
+
+      const actions = document.createElement("div");
+      actions.className = "preview-heading-actions";
+
+      const copyStatus = document.createElement("span");
+      copyStatus.className = "preview-copy-status";
+      copyStatus.setAttribute("role", "status");
+      copyStatus.setAttribute("aria-live", "polite");
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "secondary";
+      button.textContent = "Copy text";
+      button.disabled = !rawText;
+      button.setAttribute("aria-label", `Copy ${field.label} text`);
+      button.addEventListener("click", async () => {
+        const currentText = state.draft[field.key] || "";
+        const ok = await copyText(currentText);
+        copyStatus.textContent = ok ? "Copied" : "Copy unavailable";
+        copyStatus.classList.toggle("error", !ok);
+        setTimeout(() => {
+          copyStatus.textContent = "";
+          copyStatus.classList.remove("error");
+        }, 2000);
+      });
+
+      actions.append(copyStatus, button);
+      header.append(title, actions);
+
+      const textEl = document.createElement("p");
+      textEl.className = rawText ? "section-preview-text" : "section-preview-text is-blank";
+      if (rawText) {
+        renderAcronymHighlights(textEl, rawText);
+      } else {
+        textEl.textContent = "[Blank]";
+      }
+
+      const countEl = document.createElement("small");
+      const over = rawText.length - field.limit;
+      countEl.className = over > 0 ? "section-preview-meta over-limit" : "section-preview-meta";
+      countEl.textContent = over > 0
+        ? `${rawText.length} / ${field.limit} characters (${over} over limit)`
+        : `${rawText.length} / ${field.limit} characters`;
+
+      card.append(header, textEl, countEl);
+      container.append(card);
+    }
+  }
+
+  function setReportView(preview) {
+    byId("editorLayout").hidden = preview;
+    byId("reportPreviewPanel").hidden = !preview;
+    byId("editViewBtn").setAttribute("aria-pressed", String(!preview));
+    byId("previewViewBtn").setAttribute("aria-pressed", String(preview));
+    byId("editViewBtn").classList.toggle("secondary", preview);
+    byId("previewViewBtn").classList.toggle("secondary", !preview);
+    if (preview) renderSectionPreviews();
+  }
+
+  function setupPreview() {
+    byId("editViewBtn").addEventListener("click", () => setReportView(false));
+    byId("previewViewBtn").addEventListener("click", () => setReportView(true));
+  }
+
+  root.renderPreviewMetadata = renderPreviewMetadata;
+  root.renderSectionPreviews = renderSectionPreviews;
+  root.setReportView = setReportView;
+  root.setupPreview = setupPreview;
+})(typeof window !== "undefined" ? window : globalThis);
+</script><script>    "use strict";
+
+    const FIELD_META = [
+      {
+        key: "duty_description",
+        label: "Duty Description",
+        limit: 450,
+        description: "Describe duty scope, responsibilities, accountability, and relevant mission context."
+      },
+      {
+        key: "executing_mission",
+        label: "Executing the Mission",
+        limit: 350,
+        description: "Uses knowledge, initiative, and adaptability to produce timely, high-quality results that positively impact the mission."
+      },
+      {
+        key: "leading_people",
+        label: "Leading People",
+        limit: 350,
+        description: "Fosters cohesive teams, communicates effectively, and uses emotional intelligence to care for people and accomplish the mission."
+      },
+      {
+        key: "managing_resources",
+        label: "Managing Resources",
+        limit: 350,
+        description: "Manages assigned resources effectively and takes responsibility for actions and behaviors to maximize organizational performance."
+      },
+      {
+        key: "improving_unit",
+        label: "Improving the Unit",
+        limit: 350,
+        description: "Demonstrates critical thinking and fosters innovation to find creative solutions and improve mission execution."
+      },
+      {
+        key: "hlr_assessment",
+        label: "Higher Level Reviewer Assessment",
+        limit: 250,
+        description: "Draft the higher-level reviewer assessment in accordance with current guidance."
+      }
+    ];
+
+    const DEFAULT_VERBS = [
+      { verb: "Accelerated", category: "Mission Execution" },
+      { verb: "Accomplished", category: "Mission Execution" },
+      { verb: "Achieved", category: "Mission Execution" },
+      { verb: "Adapted", category: "Mission Execution" },
+      { verb: "Delivered", category: "Mission Execution" },
+      { verb: "Executed", category: "Mission Execution" },
+      { verb: "Implemented", category: "Mission Execution" },
+      { verb: "Improved", category: "Mission Execution" },
+      { verb: "Integrated", category: "Mission Execution" },
+
+      { verb: "Coached", category: "Leadership" },
+      { verb: "Developed", category: "Leadership" },
+      { verb: "Directed", category: "Leadership" },
+      { verb: "Empowered", category: "Leadership" },
+      { verb: "Led", category: "Leadership" },
+      { verb: "Mentored", category: "Leadership" },
+      { verb: "Organized", category: "Leadership" },
+      { verb: "Supervised", category: "Leadership" },
+      { verb: "Strengthened", category: "Leadership" },
+
+      { verb: "Allocated", category: "Resource Management" },
+      { verb: "Consolidated", category: "Resource Management" },
+      { verb: "Controlled", category: "Resource Management" },
+      { verb: "Managed", category: "Resource Management" },
+      { verb: "Optimized", category: "Resource Management" },
+      { verb: "Prioritized", category: "Resource Management" },
+      { verb: "Reduced", category: "Resource Management" },
+      { verb: "Stewarded", category: "Resource Management" },
+
+      { verb: "Analyzed", category: "Improvement" },
+      { verb: "Created", category: "Improvement" },
+      { verb: "Designed", category: "Improvement" },
+      { verb: "Established", category: "Improvement" },
+      { verb: "Innovated", category: "Improvement" },
+      { verb: "Modernized", category: "Improvement" },
+      { verb: "Resolved", category: "Improvement" },
+      { verb: "Streamlined", category: "Improvement" }
+    ];
+
+    const DEFAULT_ACRONYMS = [];
+
+    let saveTimer = null;
+    let lastFocusedField = "duty_description";
+    let workspaceVersion = 0;
+    let activeImportId = 0;
+
+    let state = createDefaultState();
+
+    function createBlankDraft() {
+      const draft = {
+        parking_lot: ""
+      };
+
+      FIELD_META.forEach(field => {
+        draft[field.key] = "";
+      });
+
+      return draft;
+    }
+
+    function createDefaultState() {
+      return {
+        version: 2,
+        updatedAt: "",
+        draft: createBlankDraft(),
+        reports: [],
+        activeReportId: "",
+        verbs: OPB.mergeVerbs(
+          DEFAULT_VERBS,
+          Object.entries(OPB_VERBS).flatMap(([category, verbs]) => verbs.map(verb => ({ verb, category })))
+        ),
+        acronyms: [...DEFAULT_ACRONYMS]
+      };
+    }
+
+    function sanitizeState(candidate) {
+      const clean = OPB.sanitizeBackup(candidate, createDefaultState());
+      clean.verbs = OPB.mergeVerbs(
+        clean.verbs,
+        DEFAULT_VERBS,
+        Object.entries(OPB_VERBS).flatMap(([category, verbs]) => verbs.map(verb => ({ verb, category })))
+      );
+      return clean;
+    }
+
+    function markMutated() {
+      workspaceVersion += 1;
+      return workspaceVersion;
+    }
+
+    function setStatus(message, type = "") {
+      const status = document.getElementById("status");
+      if (!status) return;
+      status.textContent = message;
+      status.className = `status-bar ${type}`.trim();
+    }
+
+    function formatSavedTime(isoDate) {
+      if (!isoDate) return "";
+      try {
+        const date = new Date(isoDate);
+        return Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
+      } catch {
+        return "";
+      }
+    }
+
+    async function initializeStorage() {
+      const result = await OPB_STORAGE.loadInitialState({
+        sanitizeState,
+        createDefaultState,
+        onVersionChange: () => {
+          setStatus("Browser storage changed in another tab. Export a JSON backup before closing.", "error");
+        }
+      });
+
+      if (result.state) {
+        state = result.state;
+      }
+
+      return result.message;
+    }
+
+    async function saveStateNow(expectedVersion) {
+      if (Number.isInteger(expectedVersion) && expectedVersion !== workspaceVersion) {
+        return true;
+      }
+
+      syncActiveReport();
+      state.updatedAt = new Date().toISOString();
+      const saveVersion = workspaceVersion;
+      const snapshot = JSON.parse(JSON.stringify(state));
+
+      const outcome = await OPB_STORAGE.persistSnapshot(snapshot, saveVersion);
+      if (outcome.skipped || saveVersion !== workspaceVersion) {
+        return outcome.saved;
+      }
+
+      if (outcome.saved) {
+        if (outcome.backend === "indexeddb") {
+          setStatus(`Saved automatically to IndexedDB: ${formatSavedTime(state.updatedAt)}.`, "good");
+        } else if (outcome.backend === "localStorage") {
+          setStatus(`Saved automatically to browser local storage: ${formatSavedTime(state.updatedAt)}.`, "good");
+        } else {
+          setStatus("Saved to browser fallback storage. Export a backup for portability.", "good");
+        }
+        return true;
+      }
+
+      setStatus("Automatic saving was unavailable. Export a JSON backup before closing the browser.", "error");
+      return false;
+    }
+
+    function queueSave() {
+      clearTimeout(saveTimer);
+      const versionAtQueue = markMutated();
+      setStatus("Saving…");
+
+      saveTimer = setTimeout(() => {
+        saveTimer = null;
+        saveStateNow(versionAtQueue);
+      }, 450);
+    }
+
+    function cancelQueuedSave() {
+      if (saveTimer) {
+        clearTimeout(saveTimer);
+        saveTimer = null;
+      }
+    }
+
+    function getFieldElement(key) {
+      return document.getElementById(key);
+    }
+
+    function wordCount(text) {
+      const words = String(text).trim().match(/\S+/g);
+      return words ? words.length : 0;
+    }
+
+    function renderFields() {
+      const container = document.getElementById("fieldContainer");
+      container.replaceChildren();
+
+      FIELD_META.forEach(field => {
+        const card = document.createElement("article");
+        card.className = "field-card";
+
+        const header = document.createElement("div");
+        header.className = "field-header";
+
+        const headingGroup = document.createElement("div");
+        headingGroup.className = "field-heading-group";
+
+        const heading = document.createElement("h3");
+        heading.textContent = field.label;
+
+        const desc = document.createElement("p");
+        desc.className = "field-description";
+        desc.id = `${field.key}_desc`;
+        desc.textContent = field.description;
+
+        headingGroup.append(heading, desc);
+
+        const countBadge = document.createElement("span");
+        countBadge.className = "count";
+        countBadge.id = `${field.key}_count`;
+        countBadge.textContent = `0 / ${field.limit}`;
+
+        header.append(headingGroup, countBadge);
+
+        const body = document.createElement("div");
+        body.className = "field-body";
+
+        const textarea = document.createElement("textarea");
+        textarea.id = field.key;
+        textarea.placeholder = `Draft ${field.label.toLowerCase()} here...`;
+        textarea.setAttribute("aria-label", field.label);
+        textarea.setAttribute("aria-describedby", `${field.key}_desc ${field.key}_remaining`);
+        textarea.value = state.draft[field.key] || "";
+
+        const helperRow = document.createElement("div");
+        helperRow.className = "helper-row";
+
+        const remainingEl = document.createElement("span");
+        remainingEl.id = `${field.key}_remaining`;
+        remainingEl.textContent = `${field.limit} remaining`;
+
+        const wordsEl = document.createElement("span");
+        wordsEl.id = `${field.key}_words`;
+        wordsEl.textContent = "0 words";
+
+        const limitNote = document.createElement("span");
+        limitNote.textContent = `Limit: ${field.limit} characters · excess text is preserved`;
+
+        helperRow.append(remainingEl, wordsEl, limitNote);
+
+        const reviewEl = document.createElement("div");
+        reviewEl.className = "acronym-review";
+        reviewEl.id = `${field.key}_review`;
+        reviewEl.hidden = true;
+
+        const printEl = document.createElement("div");
+        printEl.className = "print-narrative";
+        printEl.id = `${field.key}_print`;
+
+        const advisoriesEl = document.createElement("ul");
+        advisoriesEl.id = `${field.key}_advisories`;
+        advisoriesEl.className = "advisories";
+
+        const source = OPB.fields.find(f => OPB.legacyKeys[f.key] === field.key);
+        const details = document.createElement("details");
+        details.className = "guidance-details";
+        const summary = document.createElement("summary");
+        summary.textContent = "Section guidance & ALQs";
+        const guidance = document.createElement("p");
+        guidance.textContent = source ? source.alq : "";
+        details.append(summary, guidance);
+
+        body.append(textarea, helperRow, reviewEl, printEl, advisoriesEl, details);
+        card.append(header, body);
+        container.append(card);
+
+        setupPromptActions(card, field, textarea);
+
+        textarea.addEventListener("focus", () => {
+          lastFocusedField = field.key;
+          const verbTarget = document.getElementById("verbTarget");
+          if (verbTarget) verbTarget.value = field.key;
+        });
+
+        textarea.addEventListener("input", () => {
+          state.draft[field.key] = textarea.value;
+          updateFieldMetrics(field);
+          updatePreview();
+          queueSave();
+        });
+
+        updateFieldMetrics(field);
+      });
+
+      const parkingLot = getFieldElement("parking_lot");
+      parkingLot.value = state.draft.parking_lot || "";
+
+      parkingLot.onfocus = () => {
+        lastFocusedField = "parking_lot";
+      };
+
+      parkingLot.oninput = () => {
+        state.draft.parking_lot = parkingLot.value;
+        updateParkingLotMetrics();
+        queueSave();
+      };
+
+      updateParkingLotMetrics();
+    }
+
+    function updateFieldMetrics(field) {
+      const textarea = getFieldElement(field.key);
+      if (!textarea) return;
+      const text = textarea.value;
+      const count = text.length;
+      const remaining = field.limit - count;
+
+      const countElement = document.getElementById(`${field.key}_count`);
+      const remainingElement = document.getElementById(`${field.key}_remaining`);
+      const wordElement = document.getElementById(`${field.key}_words`);
+      const advisoryElement = document.getElementById(`${field.key}_advisories`);
+      const printElement = document.getElementById(`${field.key}_print`);
+
+      countElement.textContent = `${count} / ${field.limit}`;
+      remainingElement.textContent = remaining < 0
+        ? `${-remaining} over limit`
+        : `${remaining} remaining`;
+      remainingElement.classList.toggle("remaining-over", remaining < 0);
+      wordElement.textContent = `${wordCount(text)} ${wordCount(text) === 1 ? "word" : "words"}`;
+      printElement.textContent = text || "[Blank]";
+
+      countElement.classList.toggle("at-limit", remaining === 0);
+      countElement.classList.toggle("over-limit", remaining < 0);
+      textarea.setAttribute("aria-invalid", remaining < 0 ? "true" : "false");
+
+      advisoryElement.replaceChildren();
+      const advisories = OPB.advisory(text, field.key, state.verbs, state.acronyms);
+      renderAcronymReview(field, text);
+
+      if (remaining < 0) {
+        const li = document.createElement("li");
+        li.className = "advisory-over";
+        li.textContent = `${-remaining} character${-remaining === 1 ? "" : "s"} over the limit. Edit before submission; no text has been removed.`;
+        advisoryElement.append(li);
+      }
+
+      advisories.forEach(message => {
+        const li = document.createElement("li");
+        li.textContent = message;
+        advisoryElement.append(li);
+      });
+    }
+
+    function updateParkingLotMetrics() {
+      const parking = getFieldElement("parking_lot");
+      if (!parking) return;
+      const text = parking.value;
+      const words = wordCount(text);
+      document.getElementById("parkingLotCount").textContent =
+        `${text.length} ${text.length === 1 ? "character" : "characters"} · ${words} ${words === 1 ? "word" : "words"}`;
+    }
+
+    function buildFullDraftText() {
+      const r = activeReport();
+      const headerLines = ["OFFICER PERFORMANCE BRIEF — DRAFT"];
+      const officer = [r.rank, r.name].filter(Boolean).join(" ").trim();
+      if (officer) headerLines.push(`Officer: ${officer}`);
+      if (r.unit_name) headerLines.push(`Organization: ${r.unit_name}`);
+      if (r.duty_title) headerLines.push(`Duty Title: ${r.duty_title}`);
+      const period = [r.period_start, r.period_end].filter(Boolean).join(" to ");
+      if (period) headerLines.push(`Reporting Period: ${period}`);
+
+      const output = [...headerLines, ""];
+      FIELD_META.forEach(field => {
+        output.push(field.label.toUpperCase());
+        output.push(state.draft[field.key] || "[Blank]");
+        output.push("");
+      });
+
+      return output.join("\n").trim();
+    }
+
+    function updatePreview() {
+      const previewEl = document.getElementById("preview");
+      if (previewEl) {
+        previewEl.textContent = buildFullDraftText();
+      }
+      if (typeof renderSectionPreviews === "function") {
+        renderSectionPreviews();
+      }
+    }
+
+    function renderVerbControls() {
+      const target = document.getElementById("verbTarget");
+      const priorTarget = target.value || lastFocusedField;
+
+      target.replaceChildren();
+      FIELD_META.forEach(field => {
+        const option = document.createElement("option");
+        option.value = field.key;
+        option.textContent = field.label;
+        target.append(option);
+      });
+
+      if ([...target.options].some(option => option.value === priorTarget)) {
+        target.value = priorTarget;
+      }
+
+      const category = document.getElementById("verbCategory");
+      const priorCategory = category.value || "All";
+      const categories = ["All", ...new Set(
+        state.verbs.map(item => item.category).filter(Boolean).sort()
+      )];
+
+      category.replaceChildren();
+      categories.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item;
+        category.append(option);
+      });
+
+      category.value = categories.includes(priorCategory) ? priorCategory : "All";
+      renderVerbList();
+    }
+
+    function renderVerbList() {
+      const category = document.getElementById("verbCategory").value;
+      const filter = document.getElementById("verbSearch").value.trim().toLowerCase();
+      const list = document.getElementById("verbList");
+
+      const matchingVerbs = state.verbs.filter(item => {
+        const categoryMatch = category === "All" || item.category === category;
+        const searchMatch = !filter || item.verb.toLowerCase().includes(filter);
+        return categoryMatch && searchMatch;
+      });
+
+      list.replaceChildren();
+
+      if (!matchingVerbs.length) {
+        const empty = document.createElement("span");
+        empty.className = "small-note";
+        empty.textContent = "No matching action verbs.";
+        list.append(empty);
+        return;
+      }
+
+      matchingVerbs.forEach(item => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "verb";
+        button.textContent = item.verb;
+        button.title = item.category;
+
+        button.addEventListener("click", () => {
+          const fieldKey = document.getElementById("verbTarget").value;
+          const field = getFieldElement(fieldKey);
+
+          if (!field) {
+            setStatus("Select an OPB field before inserting a verb.", "error");
+            return;
+          }
+
+          insertAtCursor(field, `${item.verb} `);
+          lastFocusedField = fieldKey;
+        });
+
+        list.append(button);
+      });
+    }
+
+    function renderCustomAcronyms() {
+      const list = document.getElementById("customAcronymList");
+      if (!list) return;
+      list.replaceChildren();
+
+      state.acronyms.forEach(term => {
+        const chip = document.createElement("span");
+        chip.className = "acronym-chip";
+
+        const label = document.createElement("span");
+        label.textContent = term;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.textContent = "×";
+        removeBtn.setAttribute("aria-label", `Remove custom acronym ${term}`);
+        removeBtn.addEventListener("click", () => {
+          state.acronyms = state.acronyms.filter(item => item !== term);
+          renderCustomAcronyms();
+          FIELD_META.forEach(updateFieldMetrics);
+          updatePreview();
+          queueSave();
+          setStatus(`Removed ${term} from your local custom acronyms.`, "good");
+        });
+
+        chip.append(label, removeBtn);
+        list.append(chip);
+      });
+    }
+
+    function insertAtCursor(element, text) {
+      const start = Number.isInteger(element.selectionStart)
+        ? element.selectionStart
+        : element.value.length;
+
+      const end = Number.isInteger(element.selectionEnd)
+        ? element.selectionEnd
+        : element.value.length;
+
+      const before = element.value.slice(0, start);
+      const after = element.value.slice(end);
+      const needsSpace = before && !/\s$/.test(before);
+      const insertText = `${needsSpace ? " " : ""}${text}`;
+
+      element.value = `${before}${insertText}${after}`;
+
+      const cursor = Math.min(before.length + insertText.length, element.value.length);
+      element.focus();
+      element.setSelectionRange(cursor, cursor);
+      element.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    async function copyText(text) {
+      try {
+        if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
+          throw new Error("Clipboard API unavailable");
+        }
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        const previousFocus = document.activeElement;
+        const helper = document.createElement("textarea");
+        helper.value = text;
+        helper.setAttribute("readonly", "");
+        helper.style.position = "fixed";
+        helper.style.top = "0";
+        helper.style.left = "-9999px";
+        helper.style.opacity = "0";
+        document.body.appendChild(helper);
+        helper.focus({ preventScroll: true });
+        helper.select();
+        helper.setSelectionRange(0, text.length);
+
+        let result = false;
+        try {
+          result = document.execCommand("copy");
+        } catch {
+          result = false;
+        }
+
+        helper.remove();
+        if (previousFocus && typeof previousFocus.focus === "function" && previousFocus.isConnected) {
+          previousFocus.focus({ preventScroll: true });
+        }
+        return result;
+      }
+    }
+
+    function downloadFile(filename, text, type = "application/json;charset=utf-8") {
+      const blob = new Blob([text], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function exportBackup() {
+      cancelQueuedSave();
+      markMutated();
+      await saveStateNow();
+
+      const backup = {
+        application: "OPB Performance Statement Prep Tool",
+        backupVersion: 2,
+        exportedAt: new Date().toISOString(),
+        state
+      };
+
+      const date = new Date().toISOString().slice(0, 10);
+      downloadFile(
+        `OPB-Prep-Backup-${date}.json`,
+        JSON.stringify(backup, null, 2)
+      );
+
+      setStatus("JSON backup download requested. Confirm the file was saved.", "good");
+    }
+
+    function importBackup(file) {
+      if (file.size > 10 * 1024 * 1024) {
+        setStatus("Choose a backup smaller than 10 MB.", "error");
+        return;
+      }
+
+      const requestId = ++activeImportId;
+      const versionAtStart = workspaceVersion;
+      const reader = new FileReader();
+
+      reader.onload = async () => {
+        if (requestId !== activeImportId) return;
+
+        try {
+          const imported = JSON.parse(reader.result);
+          const importedState = imported && typeof imported === "object" && imported.state ? imported.state : imported;
+
+          if (!importedState || typeof importedState !== "object" || Array.isArray(importedState)) {
+            throw new Error("The selected file does not contain a valid OPB backup.");
+          }
+
+          const validated = sanitizeState(importedState);
+          const changedWhileReading = workspaceVersion !== versionAtStart;
+          const confirmMessage = changedWhileReading
+            ? "New edits or report changes occurred while reading this file. Importing this backup will replace all current reports, action verbs, and custom acronyms. Continue?"
+            : "Importing this backup will replace all current reports, action verbs, and custom acronyms. Export a backup first if needed. Continue?";
+
+          const replace = window.confirm(confirmMessage);
+          if (!replace || requestId !== activeImportId) return;
+
+          cancelQueuedSave();
+          state = validated;
+          ensureReports();
+          markMutated();
+
+          renderReportControls();
+          renderFields();
+          renderVerbControls();
+          renderCustomAcronyms();
+          updatePreview();
+
+          const saved = await saveStateNow();
+          setStatus(
+            saved
+              ? "Backup imported and saved to this browser."
+              : "Backup imported into memory. Browser saving is unavailable; export a backup before closing.",
+            saved ? "good" : "error"
+          );
+        } catch (error) {
+          setStatus(`Could not import backup: ${error.message}`, "error");
+        }
+      };
+
+      reader.onerror = () => {
+        if (requestId === activeImportId) {
+          setStatus("Could not read the selected backup file.", "error");
+        }
+      };
+
+      reader.readAsText(file);
+    }
+
+    async function clearDraft() {
+      const confirmed = window.confirm(
+        "Clear this report’s OPB fields and Parking Lot? Other reports, report metadata, and custom helper terms will remain."
+      );
+
+      if (!confirmed) return;
+
+      cancelQueuedSave();
+      state.draft = createBlankDraft();
+      markMutated();
+
+      renderFields();
+      updatePreview();
+      const saved = await saveStateNow();
+
+      setStatus(
+        saved
+          ? "Draft fields cleared. Report metadata and custom helper terms were retained."
+          : "Draft cleared in memory. Browser saving is unavailable; export a backup before closing.",
+        saved ? "good" : "error"
+      );
+    }
+
+    function addCustomVerb() {
+      const verbInput = document.getElementById("newVerb");
+      const categoryInput = document.getElementById("newVerbCategory");
+
+      const verb = verbInput.value.trim();
+      const category = categoryInput.value.trim() || "General";
+
+      if (!verb) {
+        setStatus("Enter an action verb before selecting Add.", "error");
+        return;
+      }
+
+      const duplicate = state.verbs.some(item =>
+        item.verb.toLowerCase() === verb.toLowerCase() &&
+        item.category.toLowerCase() === category.toLowerCase()
+      );
+
+      if (duplicate) {
+        setStatus("That action verb already exists in this category.", "error");
+        return;
+      }
+
+      state.verbs.push({ verb, category });
+      state.verbs.sort((a, b) => a.verb.localeCompare(b.verb));
+
+      verbInput.value = "";
+      categoryInput.value = "";
+
+      renderVerbControls();
+      queueSave();
+
+      setStatus(`Added action verb: ${verb}.`, "good");
+    }
+
+    function addCustomAcronym() {
+      const input = document.getElementById("newAcronym");
+      const acronym = input.value.trim().toUpperCase();
+
+      if (!/^[A-Z0-9&/-]{2,}$/.test(acronym)) {
+        setStatus("Use at least two letters, numbers, ampersands, hyphens, or slashes.", "error");
+        return;
+      }
+
+      if (!state.acronyms.includes(acronym)) {
+        state.acronyms.push(acronym);
+        state.acronyms.sort();
+      }
+
+      input.value = "";
+
+      renderCustomAcronyms();
+      FIELD_META.forEach(updateFieldMetrics);
+      updatePreview();
+      queueSave();
+
+      setStatus(`Added ${acronym} to your local custom acronyms (official AFPC list unchanged).`, "good");
+    }
+
+    function ensureReports() {
+      if (!state.reports.length) {
+        const r = OPB.reportFromDraft(state.draft);
+        state.reports = [r];
+        state.activeReportId = r.id;
+      }
+      if (!state.reports.some(r => r.id === state.activeReportId)) {
+        state.activeReportId = state.reports[0].id;
+      }
+    }
+
+    function activeReport() {
+      ensureReports();
+      return state.reports.find(r => r.id === state.activeReportId);
+    }
+
+    function syncActiveReport() {
+      const report = activeReport();
+      const i = state.reports.findIndex(r => r.id === report.id);
+      state.reports[i] = OPB.reportFromDraft(state.draft, report);
+      state.reports[i].updated_at = new Date().toISOString();
+    }
+
+    function formatReportOptionLabel(report) {
+      return [report.rank, report.name || "Untitled officer"].filter(Boolean).join(" ");
+    }
+
+    function renderReportControls() {
+      ensureReports();
+      const select = document.getElementById("reportSelect");
+      select.replaceChildren();
+      state.reports.forEach(r => {
+        const option = document.createElement("option");
+        option.value = r.id;
+        option.textContent = formatReportOptionLabel(r);
+        select.append(option);
+      });
+      select.value = state.activeReportId;
+      const current = activeReport();
+      document.querySelectorAll("[data-meta]").forEach(el => {
+        el.value = current[el.dataset.meta] || "";
+      });
+    }
+
+    function exportCSV() {
+      syncActiveReport();
+      downloadFile(
+        `opb-reports-${new Date().toISOString().slice(0, 10)}.csv`,
+        OPB.serialize(state.reports),
+        "text/csv;charset=utf-8"
+      );
+      setStatus("CSV download requested. All reports included. Export JSON Backup to also preserve custom helper terms.", "good");
+    }
+
+    async function importCSV(file) {
+      const requestId = ++activeImportId;
+      try {
+        if (file.size > 10 * 1024 * 1024) {
+          throw new Error("Choose a CSV smaller than 10 MB.");
+        }
+        const text = await file.text();
+        if (requestId !== activeImportId) return;
+
+        const reports = OPB.importCSV(text);
+        const collisions = reports.filter(r => state.reports.some(existing => existing.id === r.id)).length;
+        const additions = reports.length - collisions;
+
+        if (collisions) {
+          const message = `Import ${reports.length} report(s)? This will replace ${collisions} existing report(s) with matching IDs${additions ? ` and add ${additions} new report(s)` : ""}. Export a backup first if needed.`;
+          if (!window.confirm(message) || requestId !== activeImportId) return;
+        }
+
+        cancelQueuedSave();
+        syncActiveReport();
+        for (const r of reports) {
+          const i = state.reports.findIndex(existing => existing.id === r.id);
+          if (i < 0) state.reports.push(r);
+          else state.reports[i] = r;
+        }
+        state.activeReportId = reports[0].id;
+        state.draft = OPB.draftFromReport(reports[0]);
+        markMutated();
+
+        renderReportControls();
+        renderFields();
+        updatePreview();
+        const saved = await saveStateNow();
+
+        setStatus(
+          saved
+            ? `Imported ${reports.length} report(s) from CSV and saved to this browser.`
+            : `Imported ${reports.length} report(s) into memory. Browser saving is unavailable; export a backup before closing.`,
+          saved ? "good" : "error"
+        );
+      } catch (error) {
+        if (requestId === activeImportId) {
+          setStatus(`CSV import failed: ${error.message}`, "error");
+        }
+      }
+    }
+
+    function setupReportControls() {
+      document.getElementById("reportSelect").addEventListener("change", event => {
+        cancelQueuedSave();
+        syncActiveReport();
+        state.activeReportId = event.target.value;
+        state.draft = OPB.draftFromReport(activeReport());
+        renderReportControls();
+        renderFields();
+        updatePreview();
+        queueSave();
+      });
+
+      document.getElementById("newReportBtn").addEventListener("click", () => {
+        cancelQueuedSave();
+        syncActiveReport();
+        const report = OPB.blank();
+        state.reports.push(report);
+        state.activeReportId = report.id;
+        state.draft = OPB.draftFromReport(report);
+        renderReportControls();
+        renderFields();
+        updatePreview();
+        queueSave();
+        setStatus("Created a new report.", "good");
+      });
+
+      document.querySelectorAll("[data-meta]").forEach(el => {
+        el.addEventListener("input", () => {
+          activeReport()[el.dataset.meta] = el.value;
+          const option = document.getElementById("reportSelect").selectedOptions[0];
+          if (option) {
+            option.textContent = formatReportOptionLabel(activeReport());
+          }
+          updatePreview();
+          queueSave();
+        });
+      });
+
+      document.getElementById("exportCsvBtn").addEventListener("click", exportCSV);
+      document.getElementById("importCsvInput").addEventListener("change", event => {
+        const file = event.target.files[0];
+        if (file) importCSV(file);
+        event.target.value = "";
+      });
+
+      document.getElementById("printBtn").addEventListener("click", () => {
+        renderPreviewMetadata();
+        window.print();
+      });
+
+      const previewPrintBtn = document.getElementById("previewPrintBtn");
+      if (previewPrintBtn) {
+        previewPrintBtn.addEventListener("click", () => {
+          renderPreviewMetadata();
+          window.print();
+        });
+      }
+
+      window.addEventListener("beforeunload", event => {
+        if (saveTimer) {
+          cancelQueuedSave();
+          saveStateNow();
+          event.preventDefault();
+          event.returnValue = "";
+        }
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden && saveTimer) {
+          cancelQueuedSave();
+          saveStateNow();
+        }
+      });
+    }
+
+    async function copyFullDraftAction() {
+      const copied = await copyText(buildFullDraftText());
+      setStatus(
+        copied ? "Full report draft copied to clipboard." : "Clipboard copy was blocked by the browser.",
+        copied ? "good" : "error"
+      );
+    }
+
+    async function initialize() {
+      document.querySelectorAll("button,input,select,textarea").forEach(el => { el.disabled = true; });
+      const storageMessage = await initializeStorage();
+      setupReportControls();
+      setupPreview();
+      document.querySelectorAll("button,input,select,textarea").forEach(el => { el.disabled = false; });
+
+      ensureReports();
+      renderReportControls();
+      renderFields();
+      renderVerbControls();
+      renderCustomAcronyms();
+      updatePreview();
+
+      setStatus(
+        `${storageMessage} Storage: ${OPB_STORAGE.hasDatabase() ? "browser database" : "browser fallback when available"}.`,
+        OPB_STORAGE.hasDatabase() ? "good" : ""
+      );
+
+      document.getElementById("verbCategory").addEventListener("change", renderVerbList);
+      document.getElementById("verbSearch").addEventListener("input", renderVerbList);
+      document.getElementById("exportBackupBtn").addEventListener("click", exportBackup);
+
+      document.getElementById("importBackupInput").addEventListener("change", event => {
+        const file = event.target.files[0];
+        if (file) importBackup(file);
+        event.target.value = "";
+      });
+
+      document.getElementById("copyDraftBtn").addEventListener("click", copyFullDraftAction);
+      document.getElementById("copyPreviewBtn").addEventListener("click", copyFullDraftAction);
+
+      const previewCopyFullBtn = document.getElementById("previewCopyFullBtn");
+      if (previewCopyFullBtn) {
+        previewCopyFullBtn.addEventListener("click", copyFullDraftAction);
+      }
+
+      document.getElementById("clearDraftBtn").addEventListener("click", clearDraft);
+      document.getElementById("addVerbBtn").addEventListener("click", addCustomVerb);
+      document.getElementById("addAcronymBtn").addEventListener("click", addCustomAcronym);
+    }
+
+    initialize().catch(error => setStatus(`Could not initialize: ${error.message}. Reload or import a backup.`, "error"));
+</script></body></html>

@@ -1,0 +1,86 @@
+---
+---
+<aside class="sidebar-column" aria-label="Writing helpers and references">
+  <section class="panel" aria-labelledby="verbPickerHeading">
+    <h2 id="verbPickerHeading">Action Verb Picker</h2>
+
+    <div class="control-stack">
+      <label class="field-label" for="verbTarget">
+        Target section
+        <select id="verbTarget"></select>
+      </label>
+
+      <div class="two-col">
+        <label class="field-label" for="verbCategory">
+          Category
+          <select id="verbCategory"></select>
+        </label>
+        <label class="field-label" for="verbSearch">
+          Filter verbs
+          <input id="verbSearch" type="search" placeholder="Filter verbs">
+        </label>
+      </div>
+    </div>
+
+    <div id="verbList" class="verb-list"></div>
+    <p class="small-note">Select a verb to insert it at the cursor or selection in the target narrative without losing surrounding text.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="customTermsHeading">
+    <h2 id="customTermsHeading">Custom Terms</h2>
+    <p class="small-note">
+      Custom verbs and acronyms save automatically and are included in JSON backups. Custom acronyms suppress local review reminders only and never alter the official AFPC reference list.
+    </p>
+
+    <h3>Add Action Verb</h3>
+    <div class="three-col-inline">
+      <input id="newVerb" aria-label="New action verb" placeholder="e.g., Coordinated">
+      <input id="newVerbCategory" aria-label="New verb category" placeholder="Category">
+      <button id="addVerbBtn" type="button">Add</button>
+    </div>
+
+    <h3 class="sub-heading">Add Custom Acronym</h3>
+    <div class="two-col">
+      <input id="newAcronym" aria-label="New custom acronym" placeholder="e.g., C2/ISR">
+      <button id="addAcronymBtn" type="button">Add Acronym</button>
+    </div>
+    <div id="customAcronymList" class="chip-list" aria-label="Local custom acronyms"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="draftPreviewHeading">
+    <h2 id="draftPreviewHeading">Plain-Text Draft</h2>
+    <div id="preview" class="preview"></div>
+    <button id="copyPreviewBtn" type="button" class="secondary full-width-btn">
+      Copy Full Draft to Clipboard
+    </button>
+  </section>
+
+  <section class="panel" aria-labelledby="writingRemindersHeading">
+    <h2 id="writingRemindersHeading">Writing Reminders</h2>
+    <ul class="legend">
+      <li>Use standalone narrative performance statements.</li>
+      <li>Connect each action or behavior to a documented impact or outcome.</li>
+      <li>Use plain language and avoid unnecessary jargon.</li>
+      <li>Validate final acronyms and abbreviations against official sources.</li>
+      <li>Character counts include spaces, punctuation, and line breaks.</li>
+    </ul>
+  </section>
+
+  <section class="panel reference-panel" aria-labelledby="referencesHeading">
+    <h2 id="referencesHeading">AFPC Acronym Reference &amp; Rules</h2>
+    <p class="small-note">
+      Bundled offline lookup uses the <strong>October 28, 2024</strong> AFPC individually approved list (148 entries). Highlighted terms are local review items only.
+    </p>
+    <p class="small-note">
+      AFPC separately permits common ranks, office symbols, squadron-and-above organizations, weapons/platforms, and standard symbols or measurements by category. Custom acronyms suppress local reminders without changing the official lookup.
+    </p>
+    <p class="small-note">
+      At least one performance statement is expected per assessment section; white space is allowed. The reference tool permits “THIS SECTION NOT USED.” Limits and historical guidance come from OPB Prep Tool v1.5.pdf (internally labeled v1.4, 29 Aug 2023), with Mission ALQ guidance corrected to official Air Force Mission qualities.
+    </p>
+    <ul class="legend">
+      <li><a href="https://www.afpc.af.mil/Career-Management/Acronyms/" target="_blank" rel="noopener noreferrer">AFPC approved acronym list · October 28, 2024 snapshot</a></li>
+      <li><a href="https://www.arpc.afrc.af.mil/Portals/4/ALQ%20Writing%20Guide.pdf" target="_blank" rel="noopener noreferrer">Airman Leadership Qualities (ALQ) writing guide</a></li>
+      <li><a href="https://www.e-publishing.af.mil/" target="_blank" rel="noopener noreferrer">Air Force e-Publishing (current evaluation guidance)</a></li>
+    </ul>
+  </section>
+</aside>

@@ -1,0 +1,27 @@
+---
+---
+<div class="notice">
+  <strong>Automatic saving:</strong> Drafts save locally in this browser when storage is available. Open <code>opb.html</code> directly from disk with no server or installation. Because browser-local storage can depend on your browser profile and this file’s location, use <strong>Export JSON Backup</strong> before changing computers, browsers, profiles, or clearing site data.
+</div>
+
+<section class="toolbar" aria-label="Document controls">
+  <button id="exportBackupBtn" type="button">Export JSON Backup</button>
+
+  <label class="file-label">
+    Import JSON Backup
+    <input id="importBackupInput" class="sr-only" type="file" accept=".json,application/json">
+  </label>
+
+  <button id="exportCsvBtn" type="button">Export CSV</button>
+
+  <label class="file-label">
+    Import CSV
+    <input id="importCsvInput" class="sr-only" type="file" accept=".csv,text/csv">
+  </label>
+
+  <button id="printBtn" type="button" class="secondary">Print / Save PDF</button>
+  <button id="copyDraftBtn" type="button" class="secondary">Copy Full Draft</button>
+  <button id="clearDraftBtn" type="button" class="danger">Clear Draft</button>
+</section>
+
+<div id="status" class="status-bar" role="status" aria-live="polite">Initializing offline workspace…</div>

@@ -1,0 +1,42 @@
+---
+---
+<section class="panel report-details" aria-labelledby="reportsHeading">
+  <h2 id="reportsHeading" class="report-panel-heading">Reports</h2>
+
+  <div class="report-switch">
+    <label class="field-label" for="reportSelect">
+      Active report
+      <select id="reportSelect"></select>
+    </label>
+    <button id="newReportBtn" type="button" class="secondary">New report</button>
+  </div>
+
+  <div class="metadata-grid">
+    <label class="field-label">
+      Officer name
+      <input data-meta="name" type="text" placeholder="Officer name" autocomplete="off">
+    </label>
+    <label class="field-label">
+      Rank
+      <input data-meta="rank" type="text" placeholder="Rank" autocomplete="off">
+    </label>
+    <label class="field-label">
+      Organization
+      <input data-meta="unit_name" type="text" placeholder="Organization" autocomplete="off">
+    </label>
+    <label class="field-label">
+      Duty title
+      <input data-meta="duty_title" type="text" placeholder="Duty title" autocomplete="off">
+    </label>
+    <label class="field-label">
+      Period start
+      <input data-meta="period_start" type="date">
+    </label>
+    <label class="field-label">
+      Period end
+      <input data-meta="period_end" type="date">
+    </label>
+  </div>
+
+  <dl id="printReportMeta" class="print-report-meta" aria-hidden="true"></dl>
+</section>

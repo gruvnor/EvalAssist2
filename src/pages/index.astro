@@ -1,0 +1,60 @@
+---
+import WorkspaceHeader from '../components/WorkspaceHeader.astro';
+import DocumentToolbar from '../components/DocumentToolbar.astro';
+import ReportManager from '../components/ReportManager.astro';
+import ReportPreview from '../components/ReportPreview.astro';
+import ParkingLot from '../components/ParkingLot.astro';
+import Sidebar from '../components/Sidebar.astro';
+
+import appCss from '../styles/app.css?raw';
+import coreJs from '../lib/core.cjs?raw';
+import dataJs from '../lib/data.js?raw';
+import storageJs from '../lib/storage.js?raw';
+import writingJs from '../lib/writing.js?raw';
+import previewJs from '../lib/preview.js?raw';
+import appJs from '../lib/app.js?raw';
+
+const scripts = [coreJs, dataJs, storageJs, writingJs, previewJs, appJs];
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Draft, review, and export Air Force Officer Performance Brief narratives offline in a self-contained single HTML file.">
+  <link rel="icon" href="data:,">
+  <title>OPB Performance Statement Prep Tool</title>
+  <style is:inline set:html={appCss}></style>
+</head>
+<body>
+  <WorkspaceHeader />
+
+  <main>
+    <DocumentToolbar />
+    <ReportManager />
+
+    <div class="view-controls" role="group" aria-label="Report view">
+      <button id="editViewBtn" type="button" aria-pressed="true">Edit report</button>
+      <button id="previewViewBtn" type="button" class="secondary" aria-pressed="false">Preview &amp; copy</button>
+    </div>
+
+    <ReportPreview />
+
+    <div class="layout" id="editorLayout">
+      <section class="editor-column" aria-labelledby="narrativesHeading">
+        <h2 id="narrativesHeading" class="sr-only">OPB Narrative Sections</h2>
+        <div id="fieldContainer"></div>
+        <ParkingLot />
+      </section>
+
+      <Sidebar />
+    </div>
+  </main>
+
+  <footer>
+    This application is an offline drafting aid. Confirm current evaluation guidance, final content, approved abbreviations, and official-system formatting through applicable supervisory, personnel, and organizational review channels.
+  </footer>
+
+  {scripts.map(code => <script is:inline set:html={code}></script>)}
+</body>
+</html>
